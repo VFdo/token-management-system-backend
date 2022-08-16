@@ -37,9 +37,13 @@ public class TMSControllers {
         return "this works fine!";
     }
 
-    @GetMapping("/dashboard")
-    public String testjwt(){
-        return "jwt working?";
+    @GetMapping("/manager/home")
+    public String managerhome(){
+        return "welcome to the manager homepage!";
     }
 
+    @GetMapping("/patient/home")
+    public String patienthome(){
+        return "welcome to the patient homepage!";
+    }
 }
