@@ -20,7 +20,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class TMSControllers {
     @Autowired
-    UserRepository userReop;
+    UserRepository userRepo;
 
     @Autowired
     TokenRepository tokenRepo;
@@ -40,7 +40,7 @@ public class TMSControllers {
     @GetMapping("/home")
     public Optional<User> homepage(){
 //        return "welcome to the homepage!";
-        return userReop.findByUsername("mary");
+        return userRepo.findByUsername("mary");
     }
 
     @PostMapping("/testing")
@@ -59,28 +59,33 @@ public class TMSControllers {
         return "welcome to the patient homepage!";
     }
 
-    // token methods - security
-    @GetMapping("/tokens/all")
+    // token methods - :TODO security
+    @GetMapping("/tokens/all")  //done
     public List<Token> getAllTokens() {
         return tokenService.getAllTokens();
     }
 
     @PostMapping("tokens/new")
-    public void addNewToken(@Valid @RequestBody TokenRequest tokenRequest){
+    public Token addNewToken(@Valid @RequestBody TokenRequest tokenRequest){
         Token t = new Token(tokenRequest.getPatientId(), tokenRequest.getDate(), TokenState.ACTIVE);
-        System.out.println(tokenRequest.getPatientId());
-        tokenService.createToken(t);
+        return tokenService.createToken(t);
     }
 
-    @GetMapping("tokens/{patient}")
-    public List<Token> getMyTokens(@PathVariable ("patient") String patient){
-        return tokenService.getAllTokensPatient(patient);
+//    @GetMapping("tokens/{patient}") :TODO - fix!!!
+//    public List<Token> getMyTokens(@PathVariable ("patient") String patient){
+//        return tokenService.getAllTokensPatient(patient);
+//    }
+
+    @PostMapping("tokens/deactivate")
+    public List<Token> changeState(String date){
+        List<Token> t = tokenService.updateToken(date);
+        return t;
     }
 
-    @PostMapping("tokens/deactivate/{date}")
-    public void changeState(@PathVariable ("date") String date){
-        tokenService.updateToken(date);
-        System.out.println(date);
+//    User Methods
+    @GetMapping("users/all")
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
     }
 
 }

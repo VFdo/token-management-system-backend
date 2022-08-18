@@ -38,23 +38,13 @@ public class TokenService {
 //    search -by patient (m/p)
     public List<Token> getAllTokensPatient(String patientid){
         List<Token> tokenList = tokenRepo.findAllByPatientid(patientid);
-        if(tokenList.isEmpty()){
-            throw new RuntimeException("No tokens to show");
-        }
-        else{
-            return tokenList;
-        }
+        return tokenList;
     }
 
 //    get all
 public List<Token> getAllTokens(){
     List<Token> allTokens = tokenRepo.findAll();
-    if(allTokens.isEmpty()){
-        throw new RuntimeException("No tokens to shows");
-    }
-    else{
-        return tokenRepo.findAll();
-    }
+    return allTokens;
 }
 
 }

@@ -74,13 +74,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+//                login
                 .antMatchers("/signin").permitAll()
-                .antMatchers("/tokens/new").permitAll()
+                .antMatchers("/").permitAll()
+//                tokens
+                .antMatchers("/tokens/new").hasAnyAuthority("ROLE_PATIENT")
                 .antMatchers("/tokens/**").permitAll()
-                .antMatchers("/tokens/deactivate/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/tokens/deactivate").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers("/tokens/all").permitAll()
+//                users
+                .antMatchers("/users/**").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/users/new").permitAll()
-                .antMatchers("/home").permitAll()
+
                 .antMatchers("/patient/home").hasAnyAuthority("ROLE_PATIENT")
                 .antMatchers("/manager/home").hasAnyAuthority("ROLE_MANAGER")
                 .anyRequest().authenticated();
