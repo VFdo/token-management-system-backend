@@ -20,7 +20,7 @@ public class TokenService {
     }
 
 //    edit -change state (m)
-    public List<Token> updateToken(String date){
+    public List<Token> deactivateToken(String date){
         try{
             List<Token> t = tokenRepo.findAllByDate(date);
             t.forEach(item -> {
@@ -36,15 +36,28 @@ public class TokenService {
     }
 
 //    search -by patient (m/p)
-    public List<Token> getAllTokensPatient(String patientid){
-        List<Token> tokenList = tokenRepo.findAllByPatientid(patientid);
+    public List<Token> getAllTokensPatient(Token t){
+        List<Token> tokenList = tokenRepo.findAllByPatientid(t.getPatientid());
         return tokenList;
     }
 
 //    get all
-public List<Token> getAllTokens(){
-    List<Token> allTokens = tokenRepo.findAll();
-    return allTokens;
-}
+    public List<Token> getAllTokens(){
+        List<Token> allTokens = tokenRepo.findAll();
+        return allTokens;
+    }
+
+//    count
+    public int getTokenCount(){
+        List<Token> allTokens = tokenRepo.findAll();
+        int tokenNumber = allTokens.size() + 1;
+        return tokenNumber;
+    }
+
+//    delete
+    public String deleteToken(Token t){
+        tokenRepo.deleteById(t.getId());
+        return "deleted";
+    }
 
 }

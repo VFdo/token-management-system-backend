@@ -17,12 +17,16 @@ public class Token {
     @Id
     private String id;
     private String patientid;
+    private String patient;
     private String date;
+    private int tokenNumber;
     private TokenState state;
 
-    public Token(String patientid, String date, TokenState state) {
+    public Token(String patientid, String patient, String date, int tokenNumber, TokenState state) {
         this.patientid = patientid;
+        this.patient = patient;
         this.date = date;
+        this.tokenNumber = tokenNumber;
         this.state = state;
     }
 
