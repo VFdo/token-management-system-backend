@@ -16,6 +16,7 @@ public interface TokenRepository extends MongoRepository<Token, String> {
     List<Token> findAllByDate(String date);
 
     List<Token> findAllByPatientid(String patientid);
+    void deleteById(String id);
 
 
 }

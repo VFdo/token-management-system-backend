@@ -16,6 +16,10 @@ public class TokenRequest {
     private String patientId;
 
     @NotBlank
+    @Size(min = 3, max = 20)
+    private String patient;
+
+    @NotBlank
     @Size(max = 10)
     private String date;
 
