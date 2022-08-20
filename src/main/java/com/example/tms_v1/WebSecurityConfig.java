@@ -79,19 +79,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
 //                tokens
                 .antMatchers("/tokens/new").hasAnyAuthority("ROLE_PATIENT")
-//                .antMatchers("/tokens/**").permitAll()
                 .antMatchers("/tokens/all").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers("/patient/tokens/all").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/tokens/deactivate").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/tokens/delete").hasAnyAuthority("ROLE_MANAGER")
 //                users
-//                .antMatchers("/users/**").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/users/new").hasAnyAuthority("ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/user/update").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"/user/details").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
                 .antMatchers(HttpMethod.POST,"user/delete").hasAnyAuthority("ROLE_MANAGER")
-
-
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

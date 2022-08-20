@@ -32,7 +32,7 @@ public class TMSControllers {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
-    // token methods - :TODO security
+    //    **************** TOKEN FEATURE ****************
     @GetMapping("/tokens/all")  //done
     public List<Token> getAllTokens() {
         return tokenService.getAllTokens();
@@ -61,7 +61,7 @@ public class TMSControllers {
         return tokenService.deleteToken(t);
     }
 
-//    User Methods
+    //    **************** USER FEATURE ****************
     @GetMapping("users/all")
     public List<User> getAllUsers(){
         return userRepo.findAll();
@@ -81,7 +81,6 @@ public class TMSControllers {
     public String deleteUser(@RequestBody User user){
         return userService.deleteUser(user);
     }
-
 }
 
 

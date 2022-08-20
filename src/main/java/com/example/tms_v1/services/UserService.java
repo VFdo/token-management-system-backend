@@ -14,6 +14,7 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder encoder;
+
     public Optional<User> updateUser(User newUser) {
         Optional<User> user = userRepository.findById(newUser.getId());
         user.orElseThrow(RuntimeException::new).setFullName(newUser.getFullName());
@@ -23,7 +24,9 @@ public class UserService {
             user.orElseThrow(RuntimeException::new).setLastName(names[names.length - 1]);
         }
         user.orElseThrow(RuntimeException::new).setEmail(newUser.getEmail());
-//        user.orElseThrow(RuntimeException::new).setPassword(encoder.encode(newUser.getPassword()));
+        if(newUser.getPassword()!=""){
+            user.orElseThrow(RuntimeException::new).setPassword(encoder.encode(newUser.getPassword()));
+        }
         user.orElseThrow(RuntimeException::new).setPhoneNo(newUser.getPhoneNo());
         user.orElseThrow(RuntimeException::new).setUsername(newUser.getUsername());
         user.orElseThrow(RuntimeException::new).setDateOfBirth(newUser.getDateOfBirth());

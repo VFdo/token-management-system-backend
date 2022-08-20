@@ -14,12 +14,16 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepo;
 
-//    add new -check if patient&date exists (p)
     public Token createToken(Token t){
-        return tokenRepo.save(t);
+        if(tokenCountDate(t.getDate()) >= 20){
+            System.out.println("cannot insert more than 20 per day");
+            throw new RuntimeException("cannot insert more than 20");
+        }
+        else{
+            return tokenRepo.save(t);
+        }
     }
 
-//    edit -change state (m)
     public List<Token> deactivateToken(String date){
         try{
             List<Token> t = tokenRepo.findAllByDate(date);
@@ -35,29 +39,30 @@ public class TokenService {
         }
     }
 
-//    search -by patient (m/p)
     public List<Token> getAllTokensPatient(Token t){
         List<Token> tokenList = tokenRepo.findAllByPatientid(t.getPatientid());
         return tokenList;
     }
 
-//    get all
     public List<Token> getAllTokens(){
         List<Token> allTokens = tokenRepo.findAll();
         return allTokens;
     }
 
-//    count
     public int getTokenCount(){
         List<Token> allTokens = tokenRepo.findAll();
         int tokenNumber = allTokens.size() + 1;
         return tokenNumber;
     }
 
-//    delete
+    private int tokenCountDate(String date){
+        List<Token> tokensToDate = tokenRepo.findAllByDate(date);
+        int count = tokensToDate.size();
+        return count;
+    }
+
     public String deleteToken(Token t){
         tokenRepo.deleteById(t.getId());
         return "deleted";
     }
-
 }
