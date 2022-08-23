@@ -32,7 +32,7 @@ public class TMSControllers {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
-    //    **************** TOKEN FEATURE ****************
+    //    **************** TOKEN FEATURES ****************
     @GetMapping("/tokens/all")  //done
     public List<Token> getAllTokens() {
         return tokenService.getAllTokens();
@@ -45,9 +45,9 @@ public class TMSControllers {
         return tokenService.createToken(t);
     }
 
-    @PostMapping("patient/tokens/all")
-    public List<Token> getMyTokens(@RequestBody Token t){
-        return tokenService.getAllTokensPatient(t);
+    @GetMapping("tokens/all/{patientId}")
+    public List<Token> getUserTokens(@PathVariable ("patientId") String patientId){
+        return tokenService.getTokensPatient(patientId);
     }
 
     @PostMapping("tokens/deactivate")
@@ -56,12 +56,12 @@ public class TMSControllers {
         return t;
     }
 
-    @PostMapping("/tokens/delete")
+    @DeleteMapping("/tokens/delete")
     public String deleteToken(@RequestBody Token t){
         return tokenService.deleteToken(t);
     }
 
-    //    **************** USER FEATURE ****************
+    //    **************** USER FEATURES ****************
     @GetMapping("users/all")
     public List<User> getAllUsers(){
         return userRepo.findAll();
@@ -77,6 +77,10 @@ public class TMSControllers {
         return userService.updateUser(user);
     }
 
+    @DeleteMapping("user/delete/{userId}")
+    public String delUser(@PathVariable ("userId") String userId){
+        return userService.delUser(userId);
+    }
     @PostMapping("user/delete")
     public String deleteUser(@RequestBody User user){
         return userService.deleteUser(user);
