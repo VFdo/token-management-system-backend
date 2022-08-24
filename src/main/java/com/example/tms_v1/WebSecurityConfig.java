@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         // This Origin header you can see that in Network tab
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -74,11 +74,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+//                login
                 .antMatchers("/signin").permitAll()
-                .antMatchers(HttpMethod.POST,"/users/new").permitAll()
-                .antMatchers("/home").permitAll()
-                .antMatchers("/patient/home").hasAnyAuthority("ROLE_PATIENT")
-                .antMatchers("/manager/home").hasAnyAuthority("ROLE_MANAGER")
+                .antMatchers("/").permitAll()
+//                tokens
+                .antMatchers("/tokens/new").hasAnyAuthority("ROLE_PATIENT")
+                .antMatchers("/tokens/all").hasAnyAuthority("ROLE_MANAGER")
+                .antMatchers("tokens/all/{patientId}").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
+                .antMatchers(HttpMethod.POST,"/tokens/deactivate").hasAnyAuthority("ROLE_MANAGER")
+                .antMatchers(HttpMethod.POST,"/tokens/delete").hasAnyAuthority("ROLE_MANAGER")
+//                users
+                .antMatchers(HttpMethod.POST,"/users/new").hasAnyAuthority("ROLE_MANAGER")
+                .antMatchers(HttpMethod.POST,"/user/update").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
+                .antMatchers(HttpMethod.POST,"/user/details").hasAnyAuthority("ROLE_PATIENT", "ROLE_MANAGER")
+                .antMatchers(HttpMethod.POST,"user/delete").hasAnyAuthority("ROLE_MANAGER")
+//                test
+                .antMatchers(HttpMethod.DELETE,"user/delete/{userId}").hasAnyAuthority("ROLE_MANAGER")
+
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

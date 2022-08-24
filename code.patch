@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/example/tms_v1/WebSecurityConfig.java b/src/main/java/com/example/tms_v1/WebSecurityConfig.java
+index c328593..1b6b8f5 100644
+--- a/src/main/java/com/example/tms_v1/WebSecurityConfig.java
++++ b/src/main/java/com/example/tms_v1/WebSecurityConfig.java
+@@ -75,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                 .authorizeRequests()
+                 .antMatchers("/signin").permitAll()
+-                .antMatchers(HttpMethod.POST,"/users/new").permitAll()
++                .antMatchers(HttpMethod.POST,"/users/new").permitAll() //change
+                 .antMatchers("/home").permitAll()
+                 .antMatchers("/patient/home").hasAnyAuthority("ROLE_PATIENT")
+                 .antMatchers("/manager/home").hasAnyAuthority("ROLE_MANAGER")

@@ -1,49 +1,90 @@
 package com.example.tms_v1.controllers;
 
+import com.example.tms_v1.models.Token;
+import com.example.tms_v1.models.TokenState;
 import com.example.tms_v1.models.User;
+import com.example.tms_v1.payload.requests.TokenRequest;
+import com.example.tms_v1.repositories.TokenRepository;
 import com.example.tms_v1.repositories.UserRepository;
+import com.example.tms_v1.services.TokenService;
+import com.example.tms_v1.services.UserDetailsServiceImpl;
+import com.example.tms_v1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 public class TMSControllers {
     @Autowired
-    UserRepository userReop;
-    @GetMapping("/api/auth/signup")
-    public String signup(){
-        return "sign up page!";
+    UserRepository userRepo;
+
+    @Autowired
+    TokenRepository tokenRepo;
+
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    //    **************** TOKEN FEATURES ****************
+    @GetMapping("/tokens/all")  //done
+    public List<Token> getAllTokens() {
+        return tokenService.getAllTokens();
     }
 
-    @GetMapping("manage")
-    public String manage(){
-        return " manage page!";
+    @PostMapping("tokens/new")
+    public Token addNewToken(@Valid @RequestBody TokenRequest tokenRequest){
+        int tokenNumber = tokenService.getTokenCount();
+        Token t = new Token(tokenRequest.getPatientId(), tokenRequest.getPatient(),tokenRequest.getDate(), tokenNumber, TokenState.ACTIVE);
+        return tokenService.createToken(t);
     }
 
-    @GetMapping("/home")
-    public Optional<User> homepage(){
-//        return "welcome to the homepage!";
-        return userReop.findByUsername("mary");
+    @GetMapping("tokens/all/{patientId}")
+    public List<Token> getUserTokens(@PathVariable ("patientId") String patientId){
+        return tokenService.getTokensPatient(patientId);
     }
 
-    @PostMapping("/testing")
-    public String test(){
-        System.out.println("works");
-        return "this works fine!";
+    @PostMapping("tokens/deactivate")
+    public List<Token> changeState(String date){
+        List<Token> t = tokenService.deactivateToken(date);
+        return t;
     }
 
-    @GetMapping("/manager/home")
-    public String managerhome(){
-        return "welcome to the manager homepage!";
+    @DeleteMapping("/tokens/delete")
+    public String deleteToken(@RequestBody Token t){
+        return tokenService.deleteToken(t);
     }
 
-    @GetMapping("/patient/home")
-    public String patienthome(){
-        return "welcome to the patient homepage!";
+    //    **************** USER FEATURES ****************
+    @GetMapping("users/all")
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
+    }
+
+    @PostMapping("user/details")
+    public Optional<User> getUser(@RequestBody User user){
+        return userService.findUser(user);
+    }
+
+    @PostMapping("user/update")
+    public Optional<User> updateUser(@RequestBody User user){
+        return userService.updateUser(user);
+    }
+
+    @DeleteMapping("user/delete/{userId}")
+    public String delUser(@PathVariable ("userId") String userId){
+        return userService.delUser(userId);
+    }
+    @PostMapping("user/delete")
+    public String deleteUser(@RequestBody User user){
+        return userService.deleteUser(user);
     }
 }
+
+
