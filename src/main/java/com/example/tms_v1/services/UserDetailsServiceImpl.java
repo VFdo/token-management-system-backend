@@ -29,16 +29,3 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 }
-
-//try{
-//        List<Token> t = tokenRepo.findAllByDate(date);
-//        t.forEach(item -> {
-//        item.setState(TokenState.DEACTIVATED);
-//        });
-//        tokenRepo.saveAll(t);
-//        return t;
-//        }
-//        catch (Exception ex){
-//        System.out.println(ex);
-//        return null;
-//        }
